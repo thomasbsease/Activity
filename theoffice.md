@@ -103,6 +103,32 @@ office_lines <- theoffice %>%
 
 ### Exercise 2 - Identify episodes that touch on Halloween, Valentine’s Day, and Christmas.
 
+``` r
+theoffice <- theoffice %>% 
+  mutate(text = tolower(text)) 
+
+halloween_episodes <- theoffice %>% 
+  filter(str_detect(text, "halloween")) %>% 
+  count(episode_name) %>% 
+  filter(n > 1) %>% 
+  mutate(halloween = 1) %>% 
+  select(-n)
+  
+christmas_episodes <- theoffice %>% 
+  filter(str_detect(text, "christmas")) %>% 
+  count(episode_name) %>% 
+  filter(n > 1) %>% 
+  mutate(christmas = 1) %>% 
+  select(-n)
+
+valentine_episodes <- theoffice %>% 
+  filter(str_detect(text, "valentine")) %>% 
+  count(episode_name) %>% 
+  filter(n > 1) %>% 
+  mutate(valentine = 1) %>% 
+  select(-n)
+```
+
 ### Exercise 3 - Put together a modeling dataset that includes features you’ve engineered. Also add an indicator variable called `michael` which takes the value `1` if Michael Scott (Steve Carrell) was there, and `0` if not. Note: Michael Scott (Steve Carrell) left the show at the end of Season 7.
 
 ### Exercise 4 - Split the data into training (75%) and testing (25%).
