@@ -1,6 +1,6 @@
 The Office
 ================
-Mine Çetinkaya-Rundel
+Thomas Sease
 
 ``` r
 library(tidyverse)
@@ -19,18 +19,18 @@ glimpse(theoffice)
 
     ## Rows: 55,130
     ## Columns: 12
-    ## $ index            <int> 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 1…
-    ## $ season           <int> 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1…
-    ## $ episode          <int> 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1…
-    ## $ episode_name     <chr> "Pilot", "Pilot", "Pilot", "Pilot", "Pilot", "Pilot"…
-    ## $ director         <chr> "Ken Kwapis", "Ken Kwapis", "Ken Kwapis", "Ken Kwapi…
-    ## $ writer           <chr> "Ricky Gervais;Stephen Merchant;Greg Daniels", "Rick…
-    ## $ character        <chr> "Michael", "Jim", "Michael", "Jim", "Michael", "Mich…
-    ## $ text             <chr> "All right Jim. Your quarterlies look very good. How…
-    ## $ text_w_direction <chr> "All right Jim. Your quarterlies look very good. How…
-    ## $ imdb_rating      <dbl> 7.6, 7.6, 7.6, 7.6, 7.6, 7.6, 7.6, 7.6, 7.6, 7.6, 7.…
-    ## $ total_votes      <int> 3706, 3706, 3706, 3706, 3706, 3706, 3706, 3706, 3706…
-    ## $ air_date         <fct> 2005-03-24, 2005-03-24, 2005-03-24, 2005-03-24, 2005…
+    ## $ index            <int> 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16…
+    ## $ season           <int> 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1,…
+    ## $ episode          <int> 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1,…
+    ## $ episode_name     <chr> "Pilot", "Pilot", "Pilot", "Pilot", "Pilot", "Pilot",…
+    ## $ director         <chr> "Ken Kwapis", "Ken Kwapis", "Ken Kwapis", "Ken Kwapis…
+    ## $ writer           <chr> "Ricky Gervais;Stephen Merchant;Greg Daniels", "Ricky…
+    ## $ character        <chr> "Michael", "Jim", "Michael", "Jim", "Michael", "Micha…
+    ## $ text             <chr> "All right Jim. Your quarterlies look very good. How …
+    ## $ text_w_direction <chr> "All right Jim. Your quarterlies look very good. How …
+    ## $ imdb_rating      <dbl> 7.6, 7.6, 7.6, 7.6, 7.6, 7.6, 7.6, 7.6, 7.6, 7.6, 7.6…
+    ## $ total_votes      <int> 3706, 3706, 3706, 3706, 3706, 3706, 3706, 3706, 3706,…
+    ## $ air_date         <fct> 2005-03-24, 2005-03-24, 2005-03-24, 2005-03-24, 2005-…
 
 Fix `air_date` for later use.
 
@@ -55,7 +55,7 @@ theoffice %>%
   distinct(season, episode)
 ```
 
-    ## # A tibble: 186 x 2
+    ## # A tibble: 186 × 2
     ##    season episode
     ##     <int>   <int>
     ##  1      1       1
@@ -71,6 +71,35 @@ theoffice %>%
     ## # … with 176 more rows
 
 ### Exercise 1 - Calculate the percentage of lines spoken by Jim, Pam, Michael, and Dwight for each episode of The Office.
+
+``` r
+office_lines <- theoffice %>% 
+  group_by(season, episode) %>%
+  mutate(n_lines = n(), 
+         lines_jim = sum(character == "Jim")/n_lines, 
+         lines_pan = sum(character == "Pan")/n_lines, 
+         lines_mike = sum(character == "Michael")/n_lines, 
+         lines_dwight = sum(character == "Dwight")/n_lines) %>%
+  ungroup() %>% 
+  select(season, episode, episode_name, contains("lines_")) %>%
+  distinct(season, episode, episode_name, .keep_all = TRUE) %>% 
+  print()
+```
+
+    ## # A tibble: 186 × 7
+    ##    season episode episode_name      lines_jim lines_pan lines_mike lines_dwight
+    ##     <int>   <int> <chr>                 <dbl>     <dbl>      <dbl>        <dbl>
+    ##  1      1       1 Pilot                0.157          0      0.354       0.127 
+    ##  2      1       2 Diversity Day        0.123          0      0.369       0.0837
+    ##  3      1       3 Health Care          0.172          0      0.230       0.254 
+    ##  4      1       4 The Alliance         0.202          0      0.280       0.193 
+    ##  5      1       5 Basketball           0.0913         0      0.452       0.109 
+    ##  6      1       6 Hot Girl             0.159          0      0.306       0.0809
+    ##  7      2       1 The Dundies          0.125          0      0.375       0.125 
+    ##  8      2       2 Sexual Harassment    0.0565         0      0.353       0.0389
+    ##  9      2       3 Office Olympics      0.196          0      0.295       0.196 
+    ## 10      2       4 The Fire             0.160          0      0.216       0.204 
+    ## # … with 176 more rows
 
 ### Exercise 2 - Identify episodes that touch on Halloween, Valentine’s Day, and Christmas.
 
@@ -104,10 +133,10 @@ office_fit_rs <- ___ %>%
 ___(office_fit_rs)
 ```
 
-    ## Error: <text>:2:19: unexpected input
+    ## Error: <text>:2:20: unexpected input
     ## 1: set.seed(345)
-    ## 2: folds <- vfold_cv(_
-    ##                      ^
+    ## 2: folds <- vfold_cv(__
+    ##                       ^
 
 ### Exercise 10 - Use your model to make predictions for the testing data and calculate the RMSE. Also use the model developed in the [cross validation lesson](https://ids-s1-20.github.io/slides/week-10/w10-d02-cross-validation/w10-d02-cross-validation.html) to make predictions for the testing data and calculate the RMSE as well. Which model did a better job in predicting IMDB scores for the testing data?
 
@@ -140,7 +169,7 @@ tidy(office_fit_old)
 ___
 ```
 
-    ## Error: <text>:22:1: unexpected input
+    ## Error: <text>:22:2: unexpected input
     ## 21: 
-    ## 22: _
-    ##     ^
+    ## 22: __
+    ##      ^

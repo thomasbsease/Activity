@@ -1,6 +1,6 @@
 ---
 title: "The Office"
-author: "Mine Çetinkaya-Rundel"
+author: "Thomas Sease"
 output: github_document
 ---
 
@@ -41,12 +41,25 @@ theoffice %>%
 ### Exercise 1 - Calculate the percentage of lines spoken by Jim, Pam, Michael, and Dwight for each episode of The Office.
 
 ```{r lines}
+office_lines <- theoffice %>% 
+  group_by(season, episode) %>%
+  mutate(n_lines = n(), 
+         lines_jim = sum(character == "Jim")/n_lines, 
+         lines_pan = sum(character == "Pan")/n_lines, 
+         lines_mike = sum(character == "Michael")/n_lines, 
+         lines_dwight = sum(character == "Dwight")/n_lines) %>%
+  ungroup() %>% 
+  select(season, episode, episode_name, contains("lines_")) %>%
+  distinct(season, episode, episode_name, .keep_all = TRUE) %>% 
+  print()
 
 ```
 
 ### Exercise 2 - Identify episodes that touch on Halloween, Valentine's Day, and Christmas.
 
 ```{r special-episodes}
+
+  
 
 ```
 
