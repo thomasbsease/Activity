@@ -143,19 +143,35 @@ office_df <- theoffice %>%
                   christmas = 0)) %>% 
   mutate(micheal = if_else(season > 7, 0, 1)) %>%
   mutate(across(halloween:micheal, as.factor)) %>%
-  left_join(office_lines, by = c("episode_name", "season", "episode")) %>% 
-  View()
+  left_join(office_lines, by = c("episode_name", "season", "episode"))
 ```
 
 ### Exercise 4 - Split the data into training (75%) and testing (25%).
 
 ``` r
 set.seed(1122)
+
+office_split <- initial_split(office_df)
+office_train <- training(office_split)
+office_test <- testing(office_split)
 ```
 
 ### Exercise 5 - Specify a linear regression model.
 
+``` r
+office_mod <- linear_reg() %>% 
+  set_engine("lm") 
+```
+
 ### Exercise 6 - Create a recipe that updates the role of `episode_name` to not be a predictor, removes `air_date` as a predictor, uses `season` as a factor, and removes all zero variance predictors.
+
+``` r
+office_rec <- recipe(imdb_rating ~ ., data = office_train ) %>% 
+  update_role(episode_name, new_role = "id") %>% 
+  step_rm(air_data) %>% 
+  step_dummy(all_nominal(), -episode_name) %>% 
+  step_zv(all_predictors())
+```
 
 ### Exercise 7 - Build a workflow for fitting the model specified earlier and using the recipe you developed to preprocess the data.
 
