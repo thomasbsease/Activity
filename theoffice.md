@@ -183,57 +183,70 @@ office_wflow <- workflow() %>%
 
 ### Exercise 8 - Fit the model to training data and interpret a couple of the slope coefficients.
 
+``` r
+#office_fit <- office_wflow %>% 
+#  fit(data = office_train)
+
+#tidy(office_fit)
+```
+
 ### Exercise 9 - Perform 5-fold cross validation and view model performance metrics.
 
 ``` r
 set.seed(345)
-folds <- vfold_cv(___, v = ___)
+#folds <- vfold_cv(office_train, v = 5)
 folds
-
-set.seed(456)
-office_fit_rs <- ___ %>%
-  ___(___)
-
-___(office_fit_rs)
 ```
 
-    ## Error: <text>:2:20: unexpected input
-    ## 1: set.seed(345)
-    ## 2: folds <- vfold_cv(__
-    ##                       ^
+    ## Error in eval(expr, envir, enclos): object 'folds' not found
+
+``` r
+set.seed(456)
+#office_fit_rs <- office_wflow %>%
+ # fit_resamples(folds)
+
+#View(office_fit_rs)
+```
 
 ### Exercise 10 - Use your model to make predictions for the testing data and calculate the RMSE. Also use the model developed in the [cross validation lesson](https://ids-s1-20.github.io/slides/week-10/w10-d02-cross-validation/w10-d02-cross-validation.html) to make predictions for the testing data and calculate the RMSE as well. Which model did a better job in predicting IMDB scores for the testing data?
 
 #### New model
 
+``` r
+#office_test_pred <- predict(office_fit, new_data = office_test) %>% 
+ # bind_cols(office_test %>% select(imdb_rating, episode_name))
+
+#rmse(office_test_pred, truth = imdb_rating, estimate = .pred)
+```
+
 #### Old model
 
 ``` r
-office_mod_old <- linear_reg() %>%
-  set_engine("lm")
+#office_mod_old <- linear_reg() %>%
+ # set_engine("lm")
 
-office_rec_old <- recipe(imdb_rating ~ season + episode + total_votes + air_date, data = office_train) %>%
+#office_rec_old <- recipe(imdb_rating ~ season + episode + total_votes + air_date, data = office_train) %>%
   # extract month of air_date
-  step_date(air_date, features = "month") %>%
-  step_rm(air_date) %>%
+  #step_date(air_date, features = "month") %>%
+  #step_rm(air_date) %>%
   # make dummy variables of month 
-  step_dummy(contains("month")) %>%
+  #step_dummy(contains("month")) %>%
   # remove zero variance predictors
-  step_zv(all_predictors())
+  #step_zv(all_predictors())
 
-office_wflow_old <- workflow() %>%
-  add_model(office_mod_old) %>%
-  add_recipe(office_rec_old)
+#office_wflow_old <- workflow() %>%
+ # add_model(office_mod_old) %>%
+  #add_recipe(office_rec_old)
 
-office_fit_old <- office_wflow_old %>%
-  fit(data = office_train)
+#office_fit_old <- office_wflow_old %>%
+  #fit(data = office_train)
 
-tidy(office_fit_old)
+#tidy(office_fit_old)
 
-___
+
+
+#office_test_pred_old <- predict(office_fit_old, new_data = office_test) %>% 
+ # bind_cols(office_test %>% select(imdb_rating, episode_name))
+
+#rmse(office_test_pred_old, truth = imdb_rating, estimate = .pred)
 ```
-
-    ## Error: <text>:22:2: unexpected input
-    ## 21: 
-    ## 22: __
-    ##      ^
